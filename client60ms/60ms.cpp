@@ -7,6 +7,9 @@
 
 using namespace std;
 
+int StartCount;
+bool isFirst = true;
+
 void packet(char* buffer)
 {
 	long long result, result0, result1, result2, result3, result4, result5, result6, result7;
@@ -20,8 +23,17 @@ void packet(char* buffer)
 	result7 = static_cast<unsigned char>(buffer[0]) << 56;
 
 	result = result0 + result1 + result2 + result3 + result4 + result5 + result6 + result7;
-	cout << "/ 60ms / Result: " << result << endl;
 
+	/*if (result == 0)
+	{
+		StartCount = GetTickCount();
+	}
+
+	if (result < (GetTickCount64() - StartCount) / 1000 * 60 - 120)
+		return;*/
+
+	
+	cout << "/ 60ms / Result: " << result << endl;
 }
 
 int main()
@@ -45,8 +57,17 @@ int main()
 
 	while (true)
 	{
-		char buffer[8];
+		char buffer[9];
 		int recvLen = recv(serverSocket, buffer, sizeof(buffer), 0);
+
+		if (isFirst)
+		{
+			StartCount = GetTickCount();
+			isFirst = false;
+		}
+
+		if(buffer[8] < (GetTickCount64() - StartCount) / 1000 - 2)
+			continue;
 
 		packet(buffer);
 

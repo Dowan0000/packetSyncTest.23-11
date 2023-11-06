@@ -11,7 +11,10 @@ using namespace std;
 vector<SOCKET> clients;
 
 int reqNum[8] = { 0, };
-char buffer[8] = { reqNum[7], reqNum[6] ,reqNum[5] ,reqNum[4] ,reqNum[3] ,reqNum[2] ,reqNum[1] ,reqNum[0] };
+char buffer[9] = { reqNum[7], reqNum[6] ,reqNum[5] ,reqNum[4] ,reqNum[3] ,reqNum[2] ,reqNum[1] ,reqNum[0], 0 };
+
+int StartCount;
+bool isFirst = true;
 
 void packet()
 {
@@ -38,6 +41,12 @@ void sendToAll()
 		{
 			for (auto& client : clients)
 			{
+				if (isFirst)
+				{
+					StartCount = GetTickCount();
+					isFirst = false;
+				}
+				buffer[8] = (GetTickCount64() - StartCount) / 1000;
 				int sendLen = send(client, buffer, sizeof(buffer), 0);
 			}
 				

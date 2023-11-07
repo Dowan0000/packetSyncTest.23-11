@@ -58,7 +58,9 @@ int main()
 
 	while (true)
 	{
-		char buffer[9];
+		this_thread::sleep_for(100ms);
+
+		char buffer[54];
 		int recvLen = recv(serverSocket, buffer, sizeof(buffer), 0);
 
 		if (isFirst)
@@ -72,7 +74,7 @@ int main()
 
 		packet(buffer);
 
-		this_thread::sleep_for(100ms);
+		//this_thread::sleep_for(100ms);
 	}
 
 

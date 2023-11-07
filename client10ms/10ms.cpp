@@ -61,6 +61,7 @@ int main()
 		this_thread::sleep_for(100ms);
 
 		char buffer[54]; // 시간체크 필요x, 그냥 버퍼를 크게잡는다...
+						 // 서버 부하가 심해서 패킷을 쪼개서 보내면 문제가 생길듯...
 		int recvLen = recv(serverSocket, buffer, sizeof(buffer), 0);
 
 		/*if (isFirst)

@@ -56,24 +56,29 @@ int main()
 	if (SOCKET_ERROR == connect(serverSocket, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR)))
 		return 0;
 
+	char buffer[35];
+	int writeLen = 0;
+	int share = 0;
+	int rest = 0;
 	while (true)
 	{
 		this_thread::sleep_for(100ms);
 
-		char buffer[54]; // 시간체크 필요x, 그냥 버퍼를 크게잡는다...
-						 // 서버 부하가 심해서 패킷을 쪼개서 보내면 문제가 생길듯...
-		int recvLen = recv(serverSocket, buffer, sizeof(buffer), 0);
+		int recvLen = recv(serverSocket, &buffer[rest], sizeof(buffer), 0);
+		//cout << "recvLen :" << recvLen << endl;
+		
+		writeLen = rest + recvLen;
+		share = writeLen  / 9;
+		rest = writeLen % 9;
+		if (share <= 0)
+			continue;
 
-		/*if (isFirst)
-		{
-			StartCount = GetTickCount();
-			isFirst = false;
-		}
-
-		if (buffer[8] < (GetTickCount64() - StartCount) / 1000 - 2)
-			continue;*/
-
-		packet(buffer);
+		char buf[9];
+		memcpy(buf, &buffer[(share - 1) * 9], 9); // 마지막 온전한 패킷
+		packet(buf);
+		
+		memcpy(buffer, &buffer[share * 9], rest); // 마지막 패킷의 나머지 부분
+		//memcpy(&buffer[rest], 0, writeLen); // 나머지 부분을 0으로 초기화
 
 		//this_thread::sleep_for(100ms);
 	}

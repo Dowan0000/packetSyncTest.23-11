@@ -77,8 +77,8 @@ int main()
 		memcpy(buf, &buffer[(share - 1) * 9], 9); // 마지막 온전한 패킷
 		packet(buf);
 		
-		memcpy(buffer, &buffer[share * 9], rest); // 마지막 패킷의 나머지 부분
-		//memcpy(&buffer[rest], 0, writeLen); // 나머지 부분을 0으로 초기화
+		if (rest > 0)
+			memcpy(buffer, &buffer[share * 9], rest); // 마지막 패킷의 나머지 부분
 
 		//this_thread::sleep_for(100ms);
 	}

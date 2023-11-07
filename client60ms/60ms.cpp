@@ -59,17 +59,17 @@ int main()
 	{
 		this_thread::sleep_for(16ms);
 
-		char buffer[9];
+		char buffer[54];
 		int recvLen = recv(serverSocket, buffer, sizeof(buffer), 0);
 
-		if (isFirst)
+		/*if (isFirst)
 		{
 			StartCount = GetTickCount();
 			isFirst = false;
 		}
 
 		if(buffer[8] < (GetTickCount64() - StartCount) / 1000 - 2)
-			continue;
+			continue;*/
 
 		packet(buffer);
 

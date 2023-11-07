@@ -60,18 +60,17 @@ int main()
 	{
 		this_thread::sleep_for(33ms);
 
-		char buffer[18]; // 프레임이 절반이므로 버퍼를 2배로 잡고 반을 버린다.
-						 // 그럼 실시간 프레임에 따른 조정은 어떻게?
+		char buffer[54];
 		int recvLen = recv(serverSocket, buffer, sizeof(buffer), 0);
 
-		if (isFirst)
+		/*if (isFirst)
 		{
 			StartCount = GetTickCount();
 			isFirst = false;
 		}
 
 		if (buffer[8] < (GetTickCount64() - StartCount) / 1000 - 2)
-			continue;
+			continue;*/
 
 		packet(buffer);
 

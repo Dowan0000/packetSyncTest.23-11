@@ -60,17 +60,17 @@ int main()
 	{
 		this_thread::sleep_for(100ms);
 
-		char buffer[54];
+		char buffer[54]; // 시간체크 필요x, 그냥 버퍼를 크게잡는다...
 		int recvLen = recv(serverSocket, buffer, sizeof(buffer), 0);
 
-		if (isFirst)
+		/*if (isFirst)
 		{
 			StartCount = GetTickCount();
 			isFirst = false;
 		}
 
 		if (buffer[8] < (GetTickCount64() - StartCount) / 1000 - 2)
-			continue;
+			continue;*/
 
 		packet(buffer);
 

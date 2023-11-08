@@ -14,6 +14,19 @@ int id1, id2, id3, id4, id5 = 0;
 
 void packet(char* buffer)
 {
+	long long result, result0, result1, result2, result3, result4, result5, result6, result7;
+	result0 = static_cast<unsigned char>(buffer[7]);
+	result1 = static_cast<unsigned char>(buffer[6]) << 8;
+	result2 = static_cast<unsigned char>(buffer[5]) << 16;
+	result3 = static_cast<unsigned char>(buffer[4]) << 24;
+	result4 = static_cast<unsigned char>(buffer[3]) << 32;
+	result5 = static_cast<unsigned char>(buffer[2]) << 40;
+	result6 = static_cast<unsigned char>(buffer[1]) << 48;
+	result7 = static_cast<unsigned char>(buffer[0]) << 56;
+
+	result = result0 + result1 + result2 + result3 + result4 + result5 + result6 + result7;
+	cout << "ID : " << (int)buffer[9] << " Result: " << result << endl;
+
 	switch ((int)buffer[9])
 	{
 	case 1:
@@ -65,68 +78,94 @@ int main()
 
 	while (true)
 	{
-		while (true)
-		{
-			char buf[10];
-			this_thread::sleep_for(100ms);
+		char buf[200];
+		//this_thread::sleep_for(100ms);
 
-			int recvLen = recv(serverSocket, buf, sizeof(buf), 0);
-			packet(buf);
-		}
-
-		this_thread::sleep_for(100ms);
-
-		int recvLen = recv(serverSocket, &buffer[rest], sizeof(buffer), 0);
+		int recvLen = recv(serverSocket, &buf[rest], sizeof(buf), 0);
 		cout << "recvLen :" << recvLen << endl;
-		
+
 		writeLen = rest + recvLen;
 		share = writeLen  / 10;
 		rest = writeLen % 10;
 		if (share <= 0)
 			continue;
 
-
-		while (0 < share)
+		if (1 <= share / 5)
 		{
-			switch ((int)buffer[bufcursor + 9])
+			for (int i = 0; i < 5; i++)
 			{
-			case 1:
-				memcpy(&bufarr[0][10 * bufCount[0]], &buffer[bufcursor], 10);
-				bufCount[0]++;
-				break;
-			case 2:
-				memcpy(&bufarr[1][10 * bufCount[1]], &buffer[bufcursor], 10);
-				bufCount[1]++;
-				break;
-			case 3:
-				memcpy(&bufarr[2][10 * bufCount[2]], &buffer[bufcursor], 10);
-				bufCount[2]++;
-				break;
-			case 4:
-				memcpy(&bufarr[3][10 * bufCount[3]], &buffer[bufcursor], 10);
-				bufCount[3]++;
-				break;
-			case 5:
-				memcpy(&bufarr[4][10 * bufCount[4]], &buffer[bufcursor], 10);
-				bufCount[4]++;
-				break;
+				char buff[10];
+				memcpy(&buff[0], &buf[((share / 5 - 1) * 50) + (i * 10)], 10);
+
+				packet(buff);
+				this_thread::sleep_for(200ms);
 			}
-			share--;
-			bufcursor += 10;
+			
+			rest = rest + ((share % 5) * 10);
+			
 		}
-		
-		bufcursor = 0;
-
-		for (int i = 0; i < 5; i++)
+		else
 		{
-			if (bufCount[i] == 0)
-				continue;
-			char buf[10];
-			memcpy(&buf[0], &bufarr[i][(bufCount[i] - 1) * 10], 10); // 마지막 온전한 패킷
-			packet(buf);
-
-			bufCount[i] = 0;
+			rest = writeLen;
+			this_thread::sleep_for(200ms);
+			continue;
 		}
+			
+
+
+		//this_thread::sleep_for(100ms);
+
+		//int recvLen = recv(serverSocket, &buffer[rest], sizeof(buffer), 0);
+		//cout << "recvLen :" << recvLen << endl;
+		//
+		//writeLen = rest + recvLen;
+		//share = writeLen  / 10;
+		//rest = writeLen % 10;
+		//if (share <= 0)
+		//	continue;
+
+
+		//while (0 < share)
+		//{
+		//	switch ((int)buffer[bufcursor + 9])
+		//	{
+		//	case 1:
+		//		memcpy(&bufarr[0][10 * bufCount[0]], &buffer[bufcursor], 10);
+		//		bufCount[0]++;
+		//		break;
+		//	case 2:
+		//		memcpy(&bufarr[1][10 * bufCount[1]], &buffer[bufcursor], 10);
+		//		bufCount[1]++;
+		//		break;
+		//	case 3:
+		//		memcpy(&bufarr[2][10 * bufCount[2]], &buffer[bufcursor], 10);
+		//		bufCount[2]++;
+		//		break;
+		//	case 4:
+		//		memcpy(&bufarr[3][10 * bufCount[3]], &buffer[bufcursor], 10);
+		//		bufCount[3]++;
+		//		break;
+		//	case 5:
+		//		memcpy(&bufarr[4][10 * bufCount[4]], &buffer[bufcursor], 10);
+		//		bufCount[4]++;
+		//		break;
+		//	}
+		//	share--;
+		//	bufcursor += 10;
+		//}
+		//
+		//bufcursor = 0;
+
+		//for (int i = 0; i < 5; i++)
+		//{
+		//	if (bufCount[i] == 0)
+		//		continue;
+		//	char buf[10];
+		//	memcpy(&buf[0], &bufarr[i][(bufCount[i] - 1) * 10], 10); // 마지막 온전한 패킷
+		//	packet(buf);
+
+		//	bufCount[i] = 0;
+		//}
 		
 	}
 

@@ -43,8 +43,8 @@ void sendToAll(int id)
 	int reqNum[8] = { 0, };
 	char buffer[10] = { reqNum[7], reqNum[6] ,reqNum[5] ,reqNum[4] ,reqNum[3] ,reqNum[2] ,reqNum[1] ,reqNum[0], 0, LId };
 
-	//while (true)
-	for(int i = 0; i < 100; i++)
+	while (true)
+	//for(int i = 0; i < 100; i++)
 	{
 		if (clients.size() > 0)
 		{

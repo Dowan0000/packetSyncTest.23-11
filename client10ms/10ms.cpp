@@ -33,7 +33,7 @@ void packet(char* buffer)
 		return;*/
 
 	
-	cout << "/ 10ms / Result: " << result << endl;
+	cout << "Id : " << (int)buffer[9] << "/ 10ms / Result: " << result << endl;
 
 }
 
@@ -67,18 +67,32 @@ int main()
 		int recvLen = recv(serverSocket, &buffer[rest], sizeof(buffer), 0);
 		//cout << "recvLen :" << recvLen << endl;
 		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		writeLen = rest + recvLen;
-		share = writeLen  / 9;
-		rest = writeLen % 9;
+		share = writeLen  / 10;
+		rest = writeLen % 10;
 		if (share <= 0)
 			continue;
 
-		char buf[9];
-		memcpy(buf, &buffer[(share - 1) * 9], 9); // 마지막 온전한 패킷
+		char buf[10];
+		memcpy(buf, &buffer[(share - 1) * 10], 10); // 마지막 온전한 패킷
 		packet(buf);
 		
 		if (rest > 0)
-			memcpy(buffer, &buffer[share * 9], rest); // 마지막 패킷의 나머지 부분
+			memcpy(buffer, &buffer[share * 10], rest); // 마지막 패킷의 나머지 부분
 
 		//this_thread::sleep_for(100ms);
 	}

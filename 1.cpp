@@ -10,31 +10,39 @@ using namespace std;
 
 vector<SOCKET> clients;
 
-int reqNum[8] = { 0, };
-char buffer[9] = { reqNum[7], reqNum[6] ,reqNum[5] ,reqNum[4] ,reqNum[3] ,reqNum[2] ,reqNum[1] ,reqNum[0], 0 };
+//int reqNum[8] = { 0, };
+//char buffer[9] = { reqNum[7], reqNum[6] ,reqNum[5] ,reqNum[4] ,reqNum[3] ,reqNum[2] ,reqNum[1] ,reqNum[0], 0 };
 
 int StartCount;
 bool isFirst = true;
 
-void packet()
-{
-	long long result, result0, result1, result2, result3, result4, result5, result6, result7;
-	result0 = reqNum[0];
-	result1 = reqNum[1] << 8;
-	result2 = reqNum[2] << 16;
-	result3 = reqNum[3] << 24;
-	result4 = reqNum[4] << 32;
-	result5 = reqNum[5] << 40;
-	result6 = reqNum[6] << 48;
-	result7 = reqNum[7] << 56;
-	
-	result = result0 + result1 + result2 + result3 + result4 + result5 + result6 + result7;
-	cout << "Result: " << result << endl;
-	
-}
+thread_local int LId = 0;
 
-void sendToAll()
+//void packet()
+//{
+//	long long result, result0, result1, result2, result3, result4, result5, result6, result7;
+//	result0 = reqNum[0];
+//	result1 = reqNum[1] << 8;
+//	result2 = reqNum[2] << 16;
+//	result3 = reqNum[3] << 24;
+//	result4 = reqNum[4] << 32;
+//	result5 = reqNum[5] << 40;
+//	result6 = reqNum[6] << 48;
+//	result7 = reqNum[7] << 56;
+//	
+//	result = result0 + result1 + result2 + result3 + result4 + result5 + result6 + result7;
+//	cout << "Result: " << result << endl;
+//	
+//}
+
+void sendToAll(int id)
 {
+	LId = id;
+	cout << "Thread " << LId << " Start" << endl;
+
+	int reqNum[8] = { 0, };
+	char buffer[10] = { reqNum[7], reqNum[6] ,reqNum[5] ,reqNum[4] ,reqNum[3] ,reqNum[2] ,reqNum[1] ,reqNum[0], 0, LId };
+
 	while (true)
 	{
 		if (clients.size() > 0)
@@ -64,7 +72,7 @@ void sendToAll()
 			
 		}
 
-		packet();
+		//packet();
 		this_thread::sleep_for(16ms);
 	}
 }
@@ -87,7 +95,15 @@ int main()
 	bind(listenSocket, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR));
 	listen(listenSocket, 0);
 
-	thread t(sendToAll);
+	//thread t(sendToAll);
+
+	vector<thread> threads;
+	int id = 0;
+	for (int i = 0; i < 5; i++)
+	{
+		threads.push_back(thread(sendToAll, ++id));
+	}
+		
 
 	while (true)
 	{

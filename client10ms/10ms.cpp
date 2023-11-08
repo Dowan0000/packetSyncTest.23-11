@@ -65,6 +65,15 @@ int main()
 
 	while (true)
 	{
+		while (true)
+		{
+			char buf[10];
+			this_thread::sleep_for(100ms);
+
+			int recvLen = recv(serverSocket, buf, sizeof(buf), 0);
+			packet(buf);
+		}
+
 		this_thread::sleep_for(100ms);
 
 		int recvLen = recv(serverSocket, &buffer[rest], sizeof(buffer), 0);

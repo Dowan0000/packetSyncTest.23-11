@@ -44,7 +44,7 @@ void sendToAll(int id)
 	char buffer[10] = { reqNum[7], reqNum[6] ,reqNum[5] ,reqNum[4] ,reqNum[3] ,reqNum[2] ,reqNum[1] ,reqNum[0], 0, LId };
 
 	//while (true)
-	for(int i = 0; i < 1000; i++)
+	for(int i = 0; i < 100; i++)
 	{
 		if (clients.size() > 0)
 		{
@@ -96,6 +96,12 @@ int main()
 	bind(listenSocket, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR));
 	listen(listenSocket, 0);
 
+
+	sockaddr_in clientAddr;
+	memset(&clientAddr, 0, sizeof(SOCKADDR));
+	int nSize = sizeof(SOCKADDR);
+	clients.push_back(accept(listenSocket, (SOCKADDR*)&clientAddr, &nSize));
+
 	//thread t(sendToAll);
 
 	vector<thread> threads;
@@ -108,10 +114,10 @@ int main()
 
 	while (true)
 	{
-		sockaddr_in clientAddr;
+		/*sockaddr_in clientAddr;
 		memset(&clientAddr, 0, sizeof(SOCKADDR));
 		int nSize = sizeof(SOCKADDR);
-		clients.push_back(accept(listenSocket, (SOCKADDR*)&clientAddr, &nSize));
+		clients.push_back(accept(listenSocket, (SOCKADDR*)&clientAddr, &nSize));*/
 	}
 	
 

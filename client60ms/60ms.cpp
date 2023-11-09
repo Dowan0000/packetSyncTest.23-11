@@ -59,7 +59,7 @@ int main()
 	{
 		this_thread::sleep_for(16ms);
 
-		char buffer[54];
+		char buffer[9];
 		int recvLen = recv(serverSocket, buffer, sizeof(buffer), 0);
 
 		/*if (isFirst)
